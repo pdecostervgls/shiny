@@ -36,12 +36,18 @@ namespace Shiny.BluetoothLE
 
         public override IObservable<IGattService> GetKnownService(Guid serviceUuid) => Observable.FromAsync(async ct =>
         {
-            var result = await this.context.NativeDevice.GetGattServicesForUuidAsync(serviceUuid, BluetoothCacheMode.Cached);
-            if (result.Status != GattCommunicationStatus.Success)
-                throw new ArgumentException("Could not find GATT service - " + result.Status);
+            try
+            {
+                var result = await this.context.NativeDevice.GetGattServicesForUuidAsync(serviceUuid, BluetoothCacheMode.Cached);
+                if (result.Status != GattCommunicationStatus.Success)
+                    throw new ArgumentException("Could not find GATT service - " + result.Status);
 
-            var wrap = new GattService(this.context, result.Services.First());
-            return wrap;
+                var wrap = new GattService(this.context, result.Services.First());
+                return wrap;
+            } catch (NullReferenceException nre)
+            {
+                throw new ObjectDisposedException("this.context.NativeDevice");
+            }
         });
 
 
