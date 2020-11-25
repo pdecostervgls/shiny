@@ -129,8 +129,14 @@ namespace Shiny.BluetoothLE
 
                     return async () =>
                     {
-                        await this.Native.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
-                        this.Native.ValueChanged -= this.OnValueChanged;
+                        try
+                        {
+                            await this.Native.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
+                            this.Native.ValueChanged -= this.OnValueChanged;
+                        } catch (Exception e)
+                        {
+
+                        }
                     };
                 })
                 .Publish()
