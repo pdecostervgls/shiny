@@ -16,6 +16,11 @@ namespace Shiny.BluetoothLE
                 .Timeout(TimeSpan.FromSeconds(30))
                 .ToTask(cancelToken ?? CancellationToken.None);
 
+        public static Task ConnectWaitAsync(this IPeripheral peripheral, CancellationToken? cancelToken = null, ConnectionConfig? connectionConfig = null)
+            => peripheral
+                .ConnectWait(connectionConfig ?? null)
+                .Timeout(TimeSpan.FromSeconds(30))
+                .ToTask(cancelToken ?? CancellationToken.None);
 
         public static Task<IList<IGattService>> GetServicesAsync(this IPeripheral peripheral, CancellationToken? cancelToken = null)
             => peripheral
